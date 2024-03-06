@@ -1,5 +1,11 @@
 local RSGCore = exports['rsg-core']:GetCoreObject()
 
+local Debug = function(data)
+    if Config.Debug then
+        print(data)
+    end
+end
+
 ------------------------------------------
 -- load ammo
 ------------------------------------------
@@ -13,7 +19,7 @@ RegisterNetEvent('rsg-ammo:client:AddAmmo', function(ammotype)
     local max_ammo = 0
     local amount_ammo = 0
     local ammo_type = nil
-    local ammo_save = 0
+    local ammo_save = nil
     local ammo_item = nil
     local valid_ammo = false
 
@@ -22,308 +28,72 @@ RegisterNetEvent('rsg-ammo:client:AddAmmo', function(ammotype)
         return
     end
 
-    ----------------------------
-    -- revolver
-    ----------------------------
-    if weapongroup == -1101297303 and ammotype == 'AMMO_REVOLVER' then
-        max_ammo = 200
-        amount_ammo = Config.AmountRevolverAmmo
-        ammo_type = joaat('AMMO_REVOLVER')
-        ammo_save = 'ammo'
-        ammo_item = 'ammo_revolver'
-        valid_ammo = true
+    -- Elephant Rifle & Varmint
+    for i = 1, #Config.Ammos do
+        local ammos = Config.Ammos[i]
+        local weapons = ammos.weapon
+        local hash = ammos.hash
+        local group = ammos.group
+
+        if weapons
+        and weapons == weapon
+        and ammotype == hash
+        and type(group) ~= 'table'
+        and weapongroup == group
+        then
+            max_ammo = ammos.max_ammo
+            amount_ammo = ammos.reload
+            ammo_type = joaat(hash)
+            ammo_save = ammos.type
+            ammo_item = ammos.item
+            valid_ammo = true
+
+            goto continue
+
+        end
     end
 
-    if weapongroup == -1101297303 and ammotype == 'AMMO_REVOLVER_HIGH_VELOCITY' then
-        max_ammo = 200
-        amount_ammo = Config.AmountRevolverAmmo
-        ammo_type = joaat('AMMO_REVOLVER_HIGH_VELOCITY')
-        ammo_save = 'ammo_high_velocity'
-        ammo_item = 'ammo_revolver_high_velocity'
-        valid_ammo = true
+    -- All Other Weapons
+    for i = 1, #Config.Ammos do
+        local ammos = Config.Ammos[i]
+        local weapons = ammos.weapon
+        local hash = ammos.hash
+        local group = ammos.group
+
+        if type(group) ~= 'table' then
+            if not weapons and weapon ~= -570967010 and weapon ~= -1717423096 and ammotype == hash and weapongroup == group then
+                max_ammo = ammos.max_ammo
+                amount_ammo = ammos.reload
+                ammo_type = joaat(hash)
+                ammo_save = ammos.type
+                ammo_item = ammos.item
+                valid_ammo = true
+
+                break
+            end
+        else
+            for a = 1, #group do
+                local grouphash = group[a]
+
+                if not weapons and weapon ~= -570967010 and weapon ~= -1717423096 and ammotype == hash and weapongroup == grouphash then
+                    max_ammo = ammos.max_ammo
+                    amount_ammo = ammos.reload
+                    ammo_type = joaat(hash)
+                    ammo_save = ammos.type
+                    ammo_item = ammos.item
+                    valid_ammo = true
+
+                    break
+                end
+            end
+        end
     end
 
-    if weapongroup == -1101297303 and ammotype == 'AMMO_REVOLVER_SPLIT_POINT' then
-        max_ammo = 200
-        amount_ammo = Config.AmountRevolverAmmo
-        ammo_type = joaat('AMMO_REVOLVER_SPLIT_POINT')
-        ammo_save = 'ammo_split_point'
-        ammo_item = 'ammo_revolver_split_point'
-        valid_ammo = true
-    end
+    Debug('ammotype     : '..tostring(ammotype))
+    Debug('ammo_save    : '..tostring(ammo_save))
+    Debug('weapongroup  : '..tostring(weapongroup))
 
-    if weapongroup == -1101297303 and ammotype == 'AMMO_REVOLVER_EXPRESS' then
-        max_ammo = 200
-        amount_ammo = Config.AmountRevolverAmmo
-        ammo_type = joaat('AMMO_REVOLVER_EXPRESS')
-        ammo_save = 'ammo_express'
-        ammo_item = 'ammo_revolver_express'
-        valid_ammo = true
-    end
-
-    if weapongroup == -1101297303 and ammotype == 'AMMO_REVOLVER_EXPRESS_EXPLOSIVE' then
-        max_ammo = 10
-        amount_ammo = Config.AmountRevolverExplosiveAmmo
-        ammo_type = joaat('AMMO_REVOLVER_EXPRESS_EXPLOSIVE')
-        ammo_save = 'ammo_express_explosive'
-        ammo_item = 'ammo_revolver_express_explosive'
-        valid_ammo = true
-    end
-
-    ----------------------------
-    -- pistol
-    ----------------------------
-    if weapongroup == 416676503 and ammotype == 'AMMO_PISTOL' then
-        max_ammo = 100
-        amount_ammo = Config.AmountPistolAmmo
-        ammo_type = joaat('AMMO_PISTOL')
-        ammo_save = 'ammo'
-        ammo_item = 'ammo_pistol'
-        valid_ammo = true
-    end
-
-    if weapongroup == 416676503 and ammotype == 'AMMO_PISTOL_HIGH_VELOCITY' then
-        max_ammo = 100
-        amount_ammo = Config.AmountPistolAmmo
-        ammo_type = joaat('AMMO_PISTOL_HIGH_VELOCITY')
-        ammo_save = 'ammo_high_velocity'
-        ammo_item = 'ammo_pistol_high_velocity'
-        valid_ammo = true
-    end
-
-    if weapongroup == 416676503 and ammotype == 'AMMO_PISTOL_SPLIT_POINT' then
-        max_ammo = 50
-        amount_ammo = Config.AmountPistolAmmo
-        ammo_type = joaat('AMMO_PISTOL_SPLIT_POINT')
-        ammo_save = 'ammo_split_point'
-        ammo_item = 'ammo_pistol_split_point'
-        valid_ammo = true
-    end
-
-    if weapongroup == 416676503 and ammotype == 'AMMO_PISTOL_EXPRESS' then
-        max_ammo = 100
-        amount_ammo = Config.AmountPistolAmmo
-        ammo_type = joaat('AMMO_PISTOL_EXPRESS')
-        ammo_save = 'ammo_express'
-        ammo_item = 'ammo_pistol_express'
-        valid_ammo = true
-    end
-
-    if weapongroup == 416676503 and ammotype == 'AMMO_PISTOL_EXPRESS_EXPLOSIVE' then
-        max_ammo = 10
-        amount_ammo = Config.AmountPistolExplosiveAmmo
-        ammo_type = joaat('AMMO_PISTOL_EXPRESS_EXPLOSIVE')
-        ammo_save = 'ammo_express_explosive'
-        ammo_item = 'ammo_pistol_express_explosive'
-        valid_ammo = true
-    end
-
-    ----------------------------
-    -- repeater
-    ----------------------------
-    if weapongroup == -594562071 and ammotype == 'AMMO_REPEATER' then
-        max_ammo = 200
-        amount_ammo = Config.AmountRepeaterAmmo
-        ammo_type = joaat('AMMO_REPEATER')
-        ammo_save = 'ammo'
-        ammo_item = 'ammo_repeater'
-        valid_ammo = true
-    end
-
-    if weapongroup == -594562071 and ammotype == 'AMMO_REPEATER_HIGH_VELOCITY' then
-        max_ammo = 200
-        amount_ammo = Config.AmountRepeaterAmmo
-        ammo_type = joaat('AMMO_REPEATER_HIGH_VELOCITY')
-        ammo_save = 'ammo_high_velocity'
-        ammo_item = 'ammo_repeater_high_velocity'
-        valid_ammo = true
-    end
-
-    if weapongroup == -594562071 and ammotype == 'AMMO_REPEATER_SPLIT_POINT' then
-        max_ammo = 100
-        amount_ammo = Config.AmountRepeaterAmmo
-        ammo_type = joaat('AMMO_REPEATER_SPLIT_POINT')
-        ammo_save = 'ammo_split_point'
-        ammo_item = 'ammo_repeater_split_point'
-        valid_ammo = true
-    end
-
-    if weapongroup == -594562071 and ammotype == 'AMMO_REPEATER_EXPRESS' then
-        max_ammo = 200
-        amount_ammo = Config.AmountRepeaterAmmo
-        ammo_type = joaat('AMMO_REPEATER_EXPRESS')
-        ammo_save = 'ammo_express'
-        ammo_item = 'ammo_repeater_express'
-        valid_ammo = true
-    end
-
-    if weapongroup == -594562071 and ammotype == 'AMMO_REPEATER_EXPRESS_EXPLOSIVE' then
-        max_ammo = 10
-        amount_ammo = Config.AmountRepeaterExplosiveAmmo
-        ammo_type = joaat('AMMO_REPEATER_EXPRESS_EXPLOSIVE')
-        ammo_save = 'ammo_express_explosive'
-        ammo_item = 'ammo_repeater_express_explosive'
-        valid_ammo = true
-    end
-
-    ----------------------------
-    -- rifle
-    ----------------------------
-    if (weapongroup == 970310034 or weapongroup == -1212426201) and ammotype == 'AMMO_RIFLE' then
-        max_ammo = 100
-        amount_ammo = Config.AmountRifleAmmo
-        ammo_type = joaat('AMMO_RIFLE')
-        ammo_save = 'ammo'
-        ammo_item = 'ammo_rifle'
-        valid_ammo = true
-    end
-
-    if (weapongroup == 970310034 or weapongroup == -1212426201) and ammotype == 'AMMO_RIFLE_HIGH_VELOCITY' then
-        max_ammo = 100
-        amount_ammo = Config.AmountRifleAmmo
-        ammo_type = joaat('AMMO_RIFLE_HIGH_VELOCITY')
-        ammo_save = 'ammo_high_velocity'
-        ammo_item = 'ammo_rifle_high_velocity'
-        valid_ammo = true
-    end
-
-    if (weapongroup == 970310034 or weapongroup == -1212426201) and ammotype == 'AMMO_RIFLE_SPLIT_POINT' then
-        max_ammo = 50
-        amount_ammo = Config.AmountRifleAmmo
-        ammo_type = joaat('AMMO_RIFLE_SPLIT_POINT')
-        ammo_save = 'ammo_split_point'
-        ammo_item = 'ammo_rifle_split_point'
-        valid_ammo = true
-    end
-
-    if (weapongroup == 970310034 or weapongroup == -1212426201) and ammotype == 'AMMO_RIFLE_EXPRESS' then
-        max_ammo = 100
-        amount_ammo = Config.AmountRifleAmmo
-        ammo_type = joaat('AMMO_RIFLE_EXPRESS')
-        ammo_save = 'ammo_express'
-        ammo_item = 'ammo_rifle_express'
-        valid_ammo = true
-    end
-
-    if (weapongroup == 970310034 or weapongroup == -1212426201) and ammotype == 'AMMO_RIFLE_EXPRESS_EXPLOSIVE' then
-        max_ammo = 10
-        amount_ammo = Config.AmountRifleExplosiveAmmo
-        ammo_type = joaat('AMMO_RIFLE_EXPRESS_EXPLOSIVE')
-        ammo_save = 'ammo_express_explosive'
-        ammo_item = 'ammo_rifle_express_explosive'
-        valid_ammo = true
-    end
-
-    ----------------------------
-    -- shotgun
-    ----------------------------
-    if weapongroup == 860033945 and ammotype == 'AMMO_SHOTGUN' then
-        max_ammo = 60
-        amount_ammo = Config.AmountShotgunAmmo
-        ammo_type = joaat('AMMO_SHOTGUN')
-        ammo_save = 'ammo'
-        ammo_item = 'ammo_shotgun'
-        valid_ammo = true
-    end
-
-    if weapongroup == 860033945 and ammotype == 'AMMO_SHOTGUN_BUCKSHOT_INCENDIARY' then
-        max_ammo = 14
-        amount_ammo = Config.AmountShotgunIncendiaryAmmo
-        ammo_type = joaat('AMMO_SHOTGUN_BUCKSHOT_INCENDIARY')
-        ammo_save = 'ammo_buckshot_incendiary'
-        ammo_item = 'ammo_shotgun_buckshot_incendiary'
-        valid_ammo = true
-    end
-
-    if weapongroup == 860033945 and ammotype == 'AMMO_SHOTGUN_SLUG' then
-        max_ammo = 60
-        amount_ammo = Config.AmountShotgunAmmo
-        ammo_type = joaat('AMMO_SHOTGUN_SLUG')
-        ammo_save = 'ammo_slug'
-        ammo_item = 'ammo_shotgun_slug'
-        valid_ammo = true
-    end
-
-    if weapongroup == 860033945 and ammotype == 'AMMO_SHOTGUN_SLUG_EXPLOSIVE' then
-        max_ammo = 10
-        amount_ammo = Config.AmountShotgunExplosiveAmmo
-        ammo_type = joaat('AMMO_SHOTGUN_SLUG_EXPLOSIVE')
-        ammo_save = 'ammo_slug_explosive'
-        ammo_item = 'ammo_shotgun_slug_explosive'
-        valid_ammo = true
-    end
-
-    ----------------------------
-    -- elephant rifle
-    ----------------------------
-    if weapongroup == 970310034 and weapon == -1717423096 and ammotype == 'AMMO_RIFLE_ELEPHANT' then
-        max_ammo = 20
-        amount_ammo = Config.AmountElephantRifleAmmo
-        ammo_type = joaat('AMMO_RIFLE_ELEPHANT')
-        ammo_save = 'ammo'
-        ammo_item = 'ammo_rifle_elephant'
-        valid_ammo = true
-    end
-
-    ----------------------------
-    -- vermint rifle
-    ----------------------------
-    if weapongroup == 970310034 and weapon == -570967010 and ammotype == 'AMMO_22' then
-        max_ammo = 100
-        amount_ammo = Config.AmountVarmintAmmo
-        ammo_type = joaat('AMMO_22')
-        ammo_save = 'ammo'
-        ammo_item = 'ammo_varmint'
-        valid_ammo = true
-    end
-
-    if weapongroup == 970310034 and weapon == -570967010 and ammotype == 'AMMO_22_TRANQUILIZER' then
-        max_ammo = 200
-        amount_ammo = Config.AmountVarmintAmmo
-        ammo_type = joaat('AMMO_22_TRANQUILIZER')
-        ammo_save = 'ammo_tranquilizer'
-        ammo_item = 'ammo_varmint_tranquilizer'
-        valid_ammo = true
-    end
-
-    ----------------------------
-    -- bow
-    ----------------------------
-    if weapongroup == -1241684019 and ammotype == 'AMMO_ARROW' then
-        max_ammo = 40
-        amount_ammo = Config.AmountArrowAmmo
-        ammo_type = joaat('AMMO_ARROW')
-        ammo_save = 'ammo'
-        ammo_item = 'ammo_arrow'
-        valid_ammo = true
-    end
-
-    if weapongroup == -1241684019 and ammotype == 'AMMO_ARROW_FIRE' then
-        max_ammo = 8
-        amount_ammo = Config.AmountArrowAmmo
-        ammo_type = joaat('AMMO_ARROW_FIRE')
-        ammo_save = 'ammo_fire'
-        ammo_item = 'ammo_arrow_fire'
-        valid_ammo = true
-    end
-
-    if weapongroup == -1241684019 and ammotype == 'AMMO_ARROW_POISON' then
-        max_ammo = 8
-        amount_ammo = Config.AmountArrowAmmo
-        ammo_type = joaat('AMMO_ARROW_POISON')
-        ammo_save = 'ammo_poison'
-        ammo_item = 'ammo_arrow_poison'
-        valid_ammo = true
-    end
-
-    if weapongroup == -1241684019 and ammotype == 'AMMO_ARROW_DYNAMITE' then
-        max_ammo = 8
-        amount_ammo = Config.AmountArrowAmmo
-        ammo_type = joaat('AMMO_ARROW_DYNAMITE')
-        ammo_save = 'ammo_dynamite'
-        ammo_item = 'ammo_arrow_dynamite'
-        valid_ammo = true
-    end
+    ::continue::
 
     if not valid_ammo then
         lib.notify({ title = 'Wrong Ammo for Weapon', type = 'error', duration = 5000 })
