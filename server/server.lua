@@ -46,41 +46,13 @@ end)
 -- update ammo
 ------------------------------------------
 RegisterServerEvent('rsg-ammo:server:updateammo', function(serial, ammotype, ammo)
-    if ammotype == 'ammo' then
-        MySQL.update('UPDATE player_weapons SET ammo = ? WHERE serial = ?', { ammo, serial })
-    end
-    if ammotype == 'ammo_express' then
-        MySQL.update('UPDATE player_weapons SET ammo_express = ? WHERE serial = ?', { ammo, serial })
-    end
-    if ammotype == 'ammo_express_explosive' then
-        MySQL.update('UPDATE player_weapons SET ammo_express_explosive = ? WHERE serial = ?', { ammo, serial })
-    end
-    if ammotype == 'ammo_high_velocity' then
-        MySQL.update('UPDATE player_weapons SET ammo_high_velocity = ? WHERE serial = ?', { ammo, serial })
-    end
-    if ammotype == 'ammo_split_point' then
-        MySQL.update('UPDATE player_weapons SET ammo_split_point = ? WHERE serial = ?', { ammo, serial })
-    end
-    if ammotype == 'ammo_buckshot_incendiary' then
-        MySQL.update('UPDATE player_weapons SET ammo_buckshot_incendiary = ? WHERE serial = ?', { ammo, serial })
-    end
-    if ammotype == 'ammo_slug' then
-        MySQL.update('UPDATE player_weapons SET ammo_slug = ? WHERE serial = ?', { ammo, serial })
-    end
-    if ammotype == 'ammo_slug_explosive' then
-        MySQL.update('UPDATE player_weapons SET ammo_slug_explosive = ? WHERE serial = ?', { ammo, serial })
-    end
-    if ammotype == 'ammo_tranquilizer' then
-        MySQL.update('UPDATE player_weapons SET ammo_tranquilizer = ? WHERE serial = ?', { ammo, serial })
-    end
-    if ammotype == 'ammo_fire' then
-        MySQL.update('UPDATE player_weapons SET ammo_fire = ? WHERE serial = ?', { ammo, serial })
-    end
-    if ammotype == 'ammo_poison' then
-        MySQL.update('UPDATE player_weapons SET ammo_poison = ? WHERE serial = ?', { ammo, serial })
-    end
-    if ammotype == 'ammo_dynamite' then
-        MySQL.update('UPDATE player_weapons SET ammo_dynamite = ? WHERE serial = ?', { ammo, serial })
+    for i = 1, #Config.Ammos do
+        local ammos = Config.Ammos[i]
+        local ammotypes = ammos.type
+
+        if ammotype == ammotypes then
+            MySQL.update('UPDATE player_weapons SET '..ammotype..' = ? WHERE serial = ?', {ammo, serial})
+        end
     end
 end)
 
