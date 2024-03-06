@@ -133,128 +133,21 @@ CreateThread(function()
                 -----------------------
                 -- revolver ammo
                 -----------------------
-                if currenttype == joaat('AMMO_REVOLVER') then
-                    TriggerServerEvent('rsg-ammo:server:updateammo', currentSerial, 'ammo', currentammo)
-                end
-                if currenttype == joaat('AMMO_REVOLVER_EXPRESS') then
-                    TriggerServerEvent('rsg-ammo:server:updateammo', currentSerial, 'ammo_express', currentammo)
-                end
-                if currenttype == joaat('AMMO_REVOLVER_EXPRESS_EXPLOSIVE') then
-                    TriggerServerEvent('rsg-ammo:server:updateammo', currentSerial, 'ammo_express_explosive', currentammo)
-                end
-                if currenttype == joaat('AMMO_REVOLVER_HIGH_VELOCITY') then
-                    TriggerServerEvent('rsg-ammo:server:updateammo', currentSerial, 'ammo_high_velocity', currentammo)
-                end
-                if currenttype == joaat('AMMO_REVOLVER_SPLIT_POINT') then
-                    TriggerServerEvent('rsg-ammo:server:updateammo', currentSerial, 'ammo_split_point', currentammo)
-                end
+                for i = 1, #Config.Ammos do
+                    local ammos = Config.Ammos[i]
+                    local hash = ammos.hash
 
-                -----------------------
-                -- pistol ammo
-                -----------------------
-                if currenttype == joaat('AMMO_PISTOL') then
-                    TriggerServerEvent('rsg-ammo:server:updateammo', currentSerial, 'ammo', currentammo)
-                end
-                if currenttype == joaat('AMMO_PISTOL_EXPRESS') then
-                    TriggerServerEvent('rsg-ammo:server:updateammo', currentSerial, 'ammo_express', currentammo)
-                end
-                if currenttype == joaat('AMMO_PISTOL_EXPRESS_EXPLOSIVE') then
-                    TriggerServerEvent('rsg-ammo:server:updateammo', currentSerial, 'ammo_express_explosive', currentammo)
-                end
-                if currenttype == joaat('AMMO_PISTOL_HIGH_VELOCITY') then
-                    TriggerServerEvent('rsg-ammo:server:updateammo', currentSerial, 'ammo_high_velocity', currentammo)
-                end
-                if currenttype == joaat('AMMO_PISTOL_SPLIT_POINT') then
-                    TriggerServerEvent('rsg-ammo:server:updateammo', currentSerial, 'ammo_split_point', currentammo)
-                end
+                    if currenttype == joaat(hash) then
+                        local ammotype = ammos.type
 
-                -----------------------
-                -- repeater ammo
-                -----------------------
-                if currenttype == joaat('AMMO_REPEATER') then
-                    TriggerServerEvent('rsg-ammo:server:updateammo', currentSerial, 'ammo', currentammo)
-                end
-                if currenttype == joaat('AMMO_REPEATER_EXPRESS') then
-                    TriggerServerEvent('rsg-ammo:server:updateammo', currentSerial, 'ammo_express', currentammo)
-                end
-                if currenttype == joaat('AMMO_REPEATER_EXPRESS_EXPLOSIVE') then
-                    TriggerServerEvent('rsg-ammo:server:updateammo', currentSerial, 'ammo_express_explosive', currentammo)
-                end
-                if currenttype == joaat('AMMO_REPEATER_HIGH_VELOCITY') then
-                    TriggerServerEvent('rsg-ammo:server:updateammo', currentSerial, 'ammo_high_velocity', currentammo)
-                end
-                if currenttype == joaat('AMMO_REPEATER_SPLIT_POINT') then
-                    TriggerServerEvent('rsg-ammo:server:updateammo', currentSerial, 'ammo_split_point', currentammo)
-                end
+                        Debug('hash         : '..tostring(hash))
+                        Debug('ammotype     : '..tostring(ammotype))
 
-                -----------------------
-                -- rifle ammo
-                -----------------------
-                if currenttype == joaat('AMMO_RIFLE') then
-                    TriggerServerEvent('rsg-ammo:server:updateammo', currentSerial, 'ammo', currentammo)
-                end
-                if currenttype == joaat('AMMO_RIFLE_EXPRESS') then
-                    TriggerServerEvent('rsg-ammo:server:updateammo', currentSerial, 'ammo_express', currentammo)
-                end
-                if currenttype == joaat('AMMO_RIFLE_EXPRESS_EXPLOSIVE') then
-                    TriggerServerEvent('rsg-ammo:server:updateammo', currentSerial, 'ammo_express_explosive', currentammo)
-                end
-                if currenttype == joaat('AMMO_RIFLE_HIGH_VELOCITY') then
-                    TriggerServerEvent('rsg-ammo:server:updateammo', currentSerial, 'ammo_high_velocity', currentammo)
-                end
-                if currenttype == joaat('AMMO_RIFLE_SPLIT_POINT') then
-                    TriggerServerEvent('rsg-ammo:server:updateammo', currentSerial, 'ammo_split_point', currentammo)
-                end
+                        TriggerServerEvent('rsg-ammo:server:updateammo', currentSerial, ammotype, currentammo)
 
-                -----------------------
-                -- shotgun ammo
-                -----------------------
-                if currenttype == joaat('AMMO_SHOTGUN') then
-                    TriggerServerEvent('rsg-ammo:server:updateammo', currentSerial, 'ammo', currentammo)
+                        break
+                    end
                 end
-                if currenttype == joaat('AMMO_SHOTGUN_BUCKSHOT_INCENDIARY') then
-                    TriggerServerEvent('rsg-ammo:server:updateammo', currentSerial, 'ammo_buckshot_incendiary', currentammo)
-                end
-                if currenttype == joaat('AMMO_SHOTGUN_SLUG') then
-                    TriggerServerEvent('rsg-ammo:server:updateammo', currentSerial, 'ammo_slug', currentammo)
-                end
-                if currenttype == joaat('AMMO_SHOTGUN_SLUG_EXPLOSIVE') then
-                    TriggerServerEvent('rsg-ammo:server:updateammo', currentSerial, 'ammo_slug_explosive', currentammo)
-                end
-
-                -----------------------
-                -- elephant rifle ammo
-                -----------------------
-                if currenttype == joaat('AMMO_RIFLE_ELEPHANT') then
-                    TriggerServerEvent('rsg-ammo:server:updateammo', currentSerial, 'ammo', currentammo)
-                end
-
-                -----------------------
-                -- varmint rifle ammo
-                -----------------------
-                if currenttype == joaat('AMMO_22') then
-                    TriggerServerEvent('rsg-ammo:server:updateammo', currentSerial, 'ammo', currentammo)
-                end
-                if currenttype == joaat('AMMO_22_TRANQUILIZER') then
-                    TriggerServerEvent('rsg-ammo:server:updateammo', currentSerial, 'ammo_tranquilizer', currentammo)
-                end
-
-                -----------------------
-                -- bow ammo
-                -----------------------
-                if currenttype == joaat('AMMO_ARROW') then
-                    TriggerServerEvent('rsg-ammo:server:updateammo', currentSerial, 'ammo', currentammo)
-                end
-                if currenttype == joaat('AMMO_ARROW_FIRE') then
-                    TriggerServerEvent('rsg-ammo:server:updateammo', currentSerial, 'ammo_fire', currentammo)
-                end
-                if currenttype == joaat('AMMO_ARROW_POISON') then
-                    TriggerServerEvent('rsg-ammo:server:updateammo', currentSerial, 'ammo_poison', currentammo)
-                end
-                if currenttype == joaat('AMMO_ARROW_DYNAMITE') then
-                    TriggerServerEvent('rsg-ammo:server:updateammo', currentSerial, 'ammo_dynamite', currentammo)
-                end
-
             end
         end
         Wait(1000)
