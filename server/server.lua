@@ -1,31 +1,32 @@
 local RSGCore = exports['rsg-core']:GetCoreObject()
 
------------------------------------------------------------------------
--- version checker
------------------------------------------------------------------------
-local function versionCheckPrint(_type, log)
+-- Version Checker
+local versionCheckPrint = function(_type, log)
     local color = _type == 'success' and '^2' or '^1'
 
     print(('^5['..GetCurrentResourceName()..']%s %s^7'):format(color, log))
 end
 
-local function CheckVersion()
-    PerformHttpRequest('https://raw.githubusercontent.com/Rexshack-RedM/rsg-ammo/main/version.txt', function(err, text, headers)
+local CheckVersion = function()
+    PerformHttpRequest('https://raw.githubusercontent.com/Rexshack-RedM/rsg-ammo/main/version.txt', function(_, text, _)
         local currentVersion = GetResourceMetadata(GetCurrentResourceName(), 'version')
 
-        if not text then 
+        if not text then
             versionCheckPrint('error', 'Currently unable to run a version check.')
-            return 
+
+            return
         end
 
-        --versionCheckPrint('success', ('Current Version: %s'):format(currentVersion))
-        --versionCheckPrint('success', ('Latest Version: %s'):format(text))
-        
+        -- versionCheckPrint('success', ('Current Version: %s'):format(currentVersion))
+        -- versionCheckPrint('success', ('Latest Version: %s'):format(text))
+
         if text == currentVersion then
             versionCheckPrint('success', 'You are running the latest version.')
-        else
-            versionCheckPrint('error', ('You are currently running an outdated version, please update to version %s'):format(text))
+
+            return
         end
+
+        versionCheckPrint('error', ('You are currently running an outdated version, please update to version %s'):format(text))
     end)
 end
 
@@ -42,9 +43,7 @@ CreateThread(function()
     end
 end)
 
-------------------------------------------
--- update ammo
-------------------------------------------
+-- Update Ammo
 RegisterServerEvent('rsg-ammo:server:updateammo', function(serial, ammotype, ammo)
     for i = 1, #Config.Ammos do
         local ammos = Config.Ammos[i]
@@ -56,18 +55,22 @@ RegisterServerEvent('rsg-ammo:server:updateammo', function(serial, ammotype, amm
     end
 end)
 
----------------------------------------------
--- remove item
----------------------------------------------
+-- Remove Item
 RegisterServerEvent('rsg-ammo:server:removeitem')
 AddEventHandler('rsg-ammo:server:removeitem', function(item, amount)
     local src = source
-    local Player = RSGCore.Functions.GetPlayer(src)
-    Player.Functions.RemoveItem(item, amount)
-    TriggerClientEvent('inventory:client:ItemBox', src, RSGCore.Shared.Items[item], "remove")
+    local xPlayer = RSGCore.Functions.GetPlayer(src)
+
+    if not xPlayer then return end
+
+    local result = xPlayer.Functions.RemoveItem(item, amount)
+
+    if result then
+        TriggerClientEvent('inventory:client:ItemBox', src, RSGCore.Shared.Items[item], 'remove')
+    else
+        print('^1Ammo Reload Explot!^7')
+    end
 end)
 
---------------------------------------------------------------------------------------------------
--- start version check
---------------------------------------------------------------------------------------------------
+-- Start Version Check
 CheckVersion()
